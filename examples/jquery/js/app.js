@@ -44,6 +44,7 @@ jQuery(function ($) {
 			this.todoTemplate = Handlebars.compile($('#todo-template').html());
 			this.footerTemplate = Handlebars.compile($('#footer-template').html());
 			this.bindEvents();
+			this.storeTodos();
 
 			new Router({
 				'/:filter': function (filter) {
@@ -70,7 +71,10 @@ jQuery(function ($) {
 			$('#toggle-all').prop('checked', this.getActiveTodos().length === 0);
 			this.renderFooter();
 			$('#new-todo').focus();
-			util.store('todos-jquery', this.todos);
+			//util.store('todos-jquery', this.todos);
+		},
+		storeTodos: function () {
+		  util.store('todos-jquery', this.todos);
 		},
 		renderFooter: function () {
 			var todoCount = this.todos.length;
@@ -92,6 +96,7 @@ jQuery(function ($) {
 			});
 
 			this.render();
+			this.storeTodos();
 		},
 		getActiveTodos: function () {
 			return this.todos.filter(function (todo) {
@@ -118,6 +123,7 @@ jQuery(function ($) {
 			this.todos = this.getActiveTodos();
 			this.filter = 'all';
 			this.render();
+			this.storeTodos();
 		},
 		// accepts an element from inside the `.item` div and
 		// returns the corresponding index in the `todos` array
@@ -149,11 +155,13 @@ jQuery(function ($) {
 			$input.val('');
 
 			this.render();
+			this.storeTodos();
 		},
 		toggle: function (e) {
 			var i = this.indexFromEl(e.target);
 			this.todos[i].completed = !this.todos[i].completed;
 			this.render();
+			this.storeTodos();
 		},
 		edit: function (e) {
 			var $input = $(e.target).closest('li').addClass('editing').find('.edit');
@@ -185,10 +193,12 @@ jQuery(function ($) {
 			}
 
 			this.render();
+			this.storeTodos();
 		},
 		destroy: function (e) {
 			this.todos.splice(this.indexFromEl(e.target), 1);
 			this.render();
+			this.storeTodos();
 		}
 	};
 
